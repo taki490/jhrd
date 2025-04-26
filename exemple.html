@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>سلايدر دائري لانهائي مع تأثير زجاجي بلوري</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #20232a;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .wrapper {
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+    }
+
+    .slider-container {
+      overflow: hidden;
+      padding: 20px 0;
+    }
+
+    .slider {
+      display: flex;
+      gap: 40px;
+      transition: transform 0.4s ease;
+    }
+
+    .slide {
+      position: relative;
+      flex: 0 0 250px;
+      margin-right: -20px;
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      opacity: 1;
+      transform: scale(0.9);
+      transition: all 0.4s ease;
+      text-align: center;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-top-right-radius: 12px;
+      border-top-left-radius: 12px;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      filter: blur(2px); /* ← هذا هو تأثير الزجاج البلوري */
+      transition: filter 0.3s ease;
+}
+
+/* عندما تكون الصورة نشطة نلغي البلور */
+.slide.active img {
+  filter: blur(0);
+}
+
+    .caption {
+      margin: 10px 0;
+      font-size: 38px;
+      color: rgb(4, 255, 242);
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+    .slide .caption {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.9s ease;
+}
+
+    .slide.active .caption {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      width: 90%;
+      max-width: 900px;
+      margin-top: 20px;
+    }
+
+    .controls button {
+      font-size: 30px;
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      background-color: rgb(4, 255, 242);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .slider-container::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h2 class="red slide-from-right" style="font-size: 3.5rem; direction: rtl; color: rgb(4, 255, 242);"> 4. بعض الأفلام السينيمائية:</h2>
+  </div>
+<div class="wrapper">
+  <div class="slider-container">
+    <div class="slider" id="slider">
+      <!-- سيُبنى المحتوى عبر JS -->
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="prevBtn">&#10094;</button>
+    <button id="nextBtn">&#10095;</button>
+  </div>
+</div>
+
+<script>
+  const images = [
+    { src: "20.webp", caption: 'الفيل الأزرق' },
+    { src: "21.jfif", caption: 'الرسالة' },
+    { src: "22.jfif", caption: 'البداية' },
+    { src: "23.jpg", caption: 'الخلاص من شاوشانك' }
+  ];
+
+  const slider = document.getElementById('slider');
+  let currentIndex = images.length;
+
+  function buildSlides() {
+    // نكرر المجموعة 3 مرات لضمان التمرير اللا نهائي
+    const fullList = [...images, ...images, ...images];
+
+    fullList.forEach((img, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'slide';
+      slide.innerHTML = `
+        <img src="${img.src}" alt="">
+        <div class="caption">${img.caption}</div>
+      `;
+      slider.appendChild(slide);
+    });
+  }
+
+  function updatePosition(index, animated = true) {
+    const slideWidth = slider.children[0].offsetWidth + 20;
+    const offset = (slider.offsetWidth - slideWidth) / 2;
+    slider.style.transition = animated ? 'transform 0.4s ease' : 'none';
+    slider.style.transform = `translateX(${-index * slideWidth + offset}px)`;
+
+    Array.from(slider.children).forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+  }
+
+  document.getElementById('nextBtn').onclick = () => {
+    currentIndex++;
+    updatePosition(currentIndex);
+    // عند الوصول لنهاية النسخة الثانية، نعود للنسخة الوسطى
+    if (currentIndex >= images.length * 2) {
+      setTimeout(() => {
+        currentIndex = images.length;
+        updatePosition(currentIndex, false);
+      }, 400);
+    }
+  };
+
+  document.getElementById('prevBtn').onclick = () => {
+    currentIndex--;
+    updatePosition(currentIndex);
+    if (currentIndex < images.length) {
+      setTimeout(() => {
+        currentIndex = images.length * 2 - 1;
+        updatePosition(currentIndex, false);
+      }, 400);
+    }
+  };
+
+  window.addEventListener('load', () => {
+    buildSlides();
+    // ننقل للمجموعة الوسطى دون حركة ظاهرية
+    setTimeout(() => updatePosition(currentIndex, false), 10);
+  });
+
+  window.addEventListener('resize', () => {
+    updatePosition(currentIndex, false);
+  });
+</script>
+
+</body>
+</html>

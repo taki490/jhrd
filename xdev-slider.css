@@ -1,0 +1,90 @@
+
+.xdev-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 900px;
+  }
+  
+  .xdev-slider-container {
+    overflow: hidden;
+    padding: 20px 0;
+  }
+  
+  .xdev-slider {
+    display: flex;
+    gap: 40px;
+    transition: transform 0.4s ease;
+  }
+  
+  .xdev-slide {
+    position: relative;
+    flex: 0 0 250px;
+    margin-right: -20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 1;
+    transform: scale(0.9);
+    transition: all 0.4s ease;
+    text-align: center;
+  }
+  
+  .xdev-slide img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+    border-radius: 12px;
+    filter: blur(6px);
+    transition: filter 0.3s ease;
+  }
+  
+  .xdev-slide.active img {
+    filter: blur(0);
+  }
+  
+  .xdev-caption {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .xdev-slide.active {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  
+  .xdev-slide .xdev-caption {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.9s ease;
+  }
+  
+  .xdev-slide.active .xdev-caption {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .xdev-controls {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 900px;
+    margin-top: 20px;
+  }
+  
+  .xdev-controls button {
+    font-size: 30px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .xdev-slider-container::-webkit-scrollbar {
+    display: none;
+  }
+  
